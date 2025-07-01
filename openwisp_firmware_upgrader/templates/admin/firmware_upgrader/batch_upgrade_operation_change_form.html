@@ -8,6 +8,8 @@
 <link rel="stylesheet" type="text/css" href="{% static "firmware-upgrader/css/batch-upgrade-operation.css" %}">
 <script src="{% static "admin/js/ow-filter.js" %}"></script>
 <script type="text/javascript" src="{% static 'admin/js/jquery.init.js' %}"></script>
+<script type="text/javascript" src="{% static 'connection/js/lib/reconnecting-websocket.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'firmware-upgrader/js/batch-upgrade-progress.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -109,11 +111,11 @@
         </thead>
         <tbody>
             {% for operation in upgrade_operations %}
-            <tr class="{% cycle 'row1' 'row2' %}">
+            <tr class="{% cycle 'row1' 'row2' %}" data-operation-id="{{ operation.id }}">
                 <td>
                     <a href="{% url 'admin:firmware_upgrader_upgradeoperation_change' operation.id %}" class="device-link">{{ operation.device.name }}</a>
                 </td>
-                <td>{{ operation.get_status_display }}</td>
+                <td class="status-cell">{{ operation.get_status_display }}</td>
                 <td>
                     {% if operation.image %}
                         {{ operation.image }}

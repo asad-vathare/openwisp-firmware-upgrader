@@ -73,7 +73,7 @@
 
 .results-table td {
   padding: 15px 20px;
-  color: #666;
+  color: #1f1f1f;
 }
 
 .results-table tr.row1 {
@@ -88,8 +88,10 @@
   border-bottom: 1px solid #f0f0f0;
 }
 
-.device-link {
-  color: #d73027;
+.results-table .device-link,
+.results-table a.device-link,
+a.device-link {
+  color: #d73027 !important;
   text-decoration: none;
   font-weight: bold;
 }
@@ -118,4 +120,96 @@
 .pagination .current-page {
   margin: 0 10px;
   color: #666;
+}
+
+
+
+/* Operation Status Bar Styles (in table) */
+.operation-status-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 180px;
+}
+
+.operation-status-bar {
+  width: 180px;
+  height: 8px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #ccc;
+}
+
+.operation-status-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+  border-radius: 3px;
+}
+
+.operation-status-fill.idle {
+  background-color: #6c757d;
+}
+
+.operation-status-fill.in-progress {
+  background-color: #007bff;
+  animation: operation-pulse 1.5s ease-in-out infinite alternate;
+}
+
+.operation-status-fill.success {
+  background-color: #28a745;
+}
+
+.operation-status-fill.failed {
+  background-color: #dc3545;
+}
+
+.operation-status-fill.aborted {
+  background-color: #ffc107;
+}
+
+@keyframes operation-pulse {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+.operation-status-text {
+  font-size: 12px;
+  color: #333;
+  white-space: nowrap;
+}
+
+/* Status cell specific styling */
+.status-cell {
+  min-width: 200px;
+}
+
+/* Operation update animation */
+.operation-updated {
+  background-color: rgba(52, 152, 219, 0.1) !important;
+  border-left: 4px solid #3498db;
+  transition: background-color 0.3s ease, border-left 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .batch-progress-stats {
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-start;
+  }
+  
+  .operation-status-container {
+    flex-direction: column;
+    gap: 5px;
+    min-width: 120px;
+  }
+  
+  .operation-status-bar {
+    width: 100%;
+  }
 }
