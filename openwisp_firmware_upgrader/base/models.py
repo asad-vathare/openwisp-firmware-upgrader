@@ -701,6 +701,46 @@ class AbstractUpgradeOperation(UpgradeOptionsMixin, TimeStampedEditableModel):
 
         return current_progress
 
+    def _calculate_progress_from_log(self):
+        """Calculate upgrade progress percentage from log content"""
+        if not self.log:
+            return 0
+
+        log_content = self.log
+        
+        # Define upgrade steps and their progress percentages
+        upgrade_steps = [
+            {"keyword": "Connection successful, starting upgrade", "progress": 10},
+            {"keyword": "Device identity verified successfully", "progress": 15},
+            {"keyword": "Image checksum file found", "progress": 20},
+            {"keyword": "Checksum different, proceeding", "progress": 25},
+            {"keyword": "proceeding with the upload of the new image", "progress": 30},
+            {"keyword": "upload of the new image", "progress": 35},
+            {"keyword": "Enough available memory was freed up", "progress": 40},
+            {"keyword": "Proceeding to upload of the image file", "progress": 45},
+            {"keyword": "Sysupgrade test passed successfully", "progress": 55},
+            {"keyword": "proceeding with the upgrade operation", "progress": 60},
+            {"keyword": "Upgrade operation in progress", "progress": 65},
+            {"keyword": "SSH connection closed, will wait", "progress": 70},
+            {"keyword": "seconds before attempting to reconnect", "progress": 75},
+            {"keyword": "Trying to reconnect to device", "progress": 80},
+            {"keyword": "Connected! Writing checksum", "progress": 90},
+            {"keyword": "Upgrade completed successfully", "progress": 100},
+        ]
+
+        current_progress = 0
+
+        # Find the highest progress step that has been completed
+        for step in upgrade_steps:
+            if step["keyword"] in log_content:
+                current_progress = max(current_progress, step["progress"])
+
+        # Show at least 5% if there's any log content
+        if current_progress == 0 and len(log_content) > 0:
+            current_progress = 5
+
+        return current_progress
+
     def _recoverable_failure_handler(self, recoverable, error):
         cause = str(error)
         if recoverable:
